@@ -19,6 +19,14 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "*.epicgames.com",
       },
+      {
+        protocol: "https",
+        hostname: "cdn2.unrealengine.com",
+      },
+      {
+        protocol: "https",
+        hostname: "*.unrealengine.com",
+      },
     ],
   },
 };
