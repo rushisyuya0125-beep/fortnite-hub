@@ -12,7 +12,7 @@ export interface NewsItem {
 }
 
 export async function fetchFortniteNews(): Promise<NewsItem[]> {
-  const response = await fetch(`${BASE_URL}/v2/news`, { next: { revalidate: 300 } });
+  const response = await fetch(`${BASE_URL}/v2/news?language=ja`, { next: { revalidate: 300 } });
 
   if (!response.ok) throw new Error(`API error: ${response.status}`);
 

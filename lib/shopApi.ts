@@ -24,31 +24,61 @@ export const rarityColors: Record<string, string> = {
   transcendent: '#FF1744',
 };
 
+const rarityOrder: Record<string, number> = {
+  transcendent: 0,
+  mythic: 1,
+  exotic: 2,
+  legendary: 3,
+  epic: 4,
+  rare: 5,
+  uncommon: 6,
+  common: 7,
+};
+
 export async function fetchShop(): Promise<ShopItem[]> {
   const res = await fetch(`${BASE_URL}/v2/shop?language=ja`, { next: { revalidate: 600 } });
   if (!res.ok) throw new Error(`Shop API error: ${res.status}`);
   const json = await res.json();
 
   const entries: any[] = json.data?.entries ?? [];
+  const seen = new Set<string>();
   const items: ShopItem[] = [];
 
   for (const entry of entries) {
     const brItems: any[] = entry.brItems ?? entry.items ?? [];
     if (!brItems.length) continue;
-    const item = brItems[0];
-    items.push({
-      id: entry.offerId ?? item.id,
-      name: item.name ?? '不明',
-      description: item.description ?? '',
-      type: item.type?.value ?? '',
-      typeDisplay: item.type?.displayValue ?? '',
-      rarity: item.rarity?.value ?? 'common',
-      rarityDisplay: item.rarity?.displayValue ?? '',
-      price: entry.finalPrice ?? entry.regularPrice ?? 0,
-      image: item.images?.featured ?? item.images?.icon ?? item.images?.smallIcon ?? '',
-      bundle: entry.bundle?.name ?? null,
-    });
+
+    for (const item of brItems) {
+      const name: string = item.name ?? '';
+      if (!name || seen.has(name)) continue;
+      seen.add(name);
+
+      const image =
+        item.images?.featured ??
+        item.images?.icon ??
+        item.images?.smallIcon ??
+        '';
+
+      items.push({
+        id: item.id ?? entry.offerId,
+        name,
+        description: item.description ?? '',
+        type: item.type?.value ?? '',
+        typeDisplay: item.type?.displayValue ?? '',
+        rarity: item.rarity?.value ?? 'common',
+        rarityDisplay: item.rarity?.displayValue ?? '',
+        price: entry.finalPrice ?? entry.regularPrice ?? 0,
+        image,
+        bundle: entry.bundle?.name ?? null,
+      });
+    }
   }
+
+  items.sort((a, b) => {
+    const ra = rarityOrder[a.rarity] ?? 8;
+    const rb = rarityOrder[b.rarity] ?? 8;
+    return ra - rb;
+  });
 
   return items;
 }
