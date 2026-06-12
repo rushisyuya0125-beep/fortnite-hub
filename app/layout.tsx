@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Header } from "@/components/Header";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
   title: "フォトナHub | 日本一見やすいフォトナ情報サイト",
@@ -37,6 +38,7 @@ export default function RootLayout({
         }}>
           © 2024 フォトナHub — This site is not affiliated with Epic Games.
         </footer>
+        <Analytics />
       </body>
     </html>
   );
