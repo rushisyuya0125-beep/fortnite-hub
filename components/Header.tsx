@@ -6,8 +6,12 @@ export function Header() {
   const pathname = usePathname();
 
   const navStyle = (href: string): React.CSSProperties => ({
-    padding: "6px 16px",
-    borderRadius: "6px",
+    display: "flex",
+    alignItems: "center",
+    gap: "6px",
+    padding: "8px 18px",
+    minHeight: "44px",
+    borderRadius: "8px",
     fontSize: "14px",
     fontWeight: "600",
     textDecoration: "none",
@@ -17,53 +21,73 @@ export function Header() {
     transition: "all 0.15s",
   });
 
-  return (
-    <header style={{
-      backgroundColor: "var(--surface)",
-      borderBottom: "1px solid var(--border)",
-      position: "sticky",
-      top: 0,
-      zIndex: 50,
-    }}>
-      <div style={{
-        maxWidth: "1100px",
-        margin: "0 auto",
-        padding: "12px 16px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        gap: "12px",
-      }}>
-        {/* ロゴ */}
-        <Link href="/" style={{ textDecoration: "none", display: "flex", flexDirection: "column", lineHeight: 1.1 }}>
-          <span style={{
-            fontSize: "22px",
-            fontWeight: "900",
-            letterSpacing: "2px",
-            color: "var(--primary)",
-          }}>
-            フォトナHub
-          </span>
-          <span style={{
-            fontSize: "9px",
-            color: "var(--text-muted)",
-            letterSpacing: "1px",
-            fontWeight: "600",
-          }}>
-            日本一見やすいフォトナ情報サイト
-          </span>
-        </Link>
+  const tabStyle = (href: string): React.CSSProperties => ({
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "2px",
+    textDecoration: "none",
+    color: pathname === href ? "var(--primary)" : "var(--text-muted)",
+    fontSize: "10px",
+    fontWeight: "700",
+    paddingBottom: "4px",
+    borderTop: pathname === href ? `2px solid var(--primary)` : "2px solid transparent",
+    transition: "all 0.15s",
+  });
 
-        {/* ナビゲーション */}
-        <nav style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-          <Link href="/" style={navStyle("/")}>
-            🛍️ ショップ
+  return (
+    <>
+      <header style={{
+        backgroundColor: "var(--surface)",
+        borderBottom: "1px solid var(--border)",
+        position: "sticky",
+        top: 0,
+        zIndex: 50,
+      }}>
+        <div style={{
+          maxWidth: "1100px",
+          margin: "0 auto",
+          padding: "12px 16px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: "12px",
+        }}>
+          {/* ロゴ */}
+          <Link href="/" style={{ textDecoration: "none", display: "flex", flexDirection: "column", lineHeight: 1.1 }}>
+            <span style={{ fontSize: "20px", fontWeight: "900", letterSpacing: "2px", color: "var(--primary)" }}>
+              フォトナHub
+            </span>
+            <span style={{ fontSize: "9px", color: "var(--text-muted)", letterSpacing: "1px", fontWeight: "600" }}>
+              日本一見やすいフォトナ情報サイト
+            </span>
           </Link>
-          <Link href="/news" style={navStyle("/news")}>
-            📰 ニュース
-          </Link>
-        </nav>
-      </div>
-    </header>
+
+          {/* PC用ナビ（スマホでは非表示） */}
+          <nav className="header-nav" style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+            <Link href="/" style={navStyle("/")}>
+              🛍️ ショップ
+            </Link>
+            <Link href="/news" style={navStyle("/news")}>
+              📰 ニュース
+            </Link>
+          </nav>
+        </div>
+      </header>
+
+      {/* スマホ用 下部タブバー */}
+      <nav className="bottom-nav">
+        <Link href="/" style={tabStyle("/")}>
+          <span style={{ fontSize: "22px", lineHeight: 1 }}>🛍️</span>
+          <span>ショップ</span>
+        </Link>
+        <Link href="/news" style={tabStyle("/news")}>
+          <span style={{ fontSize: "22px", lineHeight: 1 }}>📰</span>
+          <span>ニュース</span>
+        </Link>
+      </nav>
+    </>
   );
 }
